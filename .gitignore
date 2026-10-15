@@ -1,0 +1,25 @@
+# Keil MDK 编译产物（不上传）
+Objects/
+Listings/
+*.o
+*.d
+*.crf
+*.lnp
+*.dep
+*.axf
+*.hex
+*.htm
+*.bak
+*.log
+*.uvguix.*
+*.uvoptx
+JLinkLog.txt
+JLinkSettings.ini
+*.iex
+
+# STM32CubeIDE / 通用
+Debug/
+build/
+out/
+.vs/
+*.tmp
