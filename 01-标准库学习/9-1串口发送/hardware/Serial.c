@@ -1,6 +1,6 @@
 #include "stm32f10x.h"                  // Device header
 #include "stdio.h"
-#include "Stdarg.h"
+#include <stdarg.h>
 void Serial_Init(void)
 {
 	RCC_APB2PeriphClockCmd (RCC_APB2Periph_USART1 ,ENABLE );
@@ -11,7 +11,6 @@ void Serial_Init(void)
 	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_9;
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA,&GPIO_InitStructure);
-	GPIO_SetBits(GPIOA,GPIO_Pin_1|GPIO_Pin_2);  
 
 	USART_InitTypeDef USART_InitStructure;
 	USART_InitStructure.USART_BaudRate=9600;
