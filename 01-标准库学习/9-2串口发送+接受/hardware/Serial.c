@@ -1,4 +1,4 @@
-#include "stm32f10x.h"                  // Device header
+﻿#include "stm32f10x.h"                  // Device header
 #include "stdio.h"
 #include <stdarg.h>
 uint8_t Serial_RxData;
@@ -37,6 +37,7 @@ void Serial_Init(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE ;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=1;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority=1;
+	NVIC_Init(&NVIC_InitStructure);
 	
 	USART_Cmd(USART1 ,ENABLE );
 }
@@ -92,7 +93,7 @@ void Serial_Printf(char *format,...)
 	char String[100];
 	va_list arg;
 	va_start (arg,format);
-	sprintf(String,format,arg);
+	vsprintf(String,format,arg);
 	va_end(arg);
 	Serial_SendString(String);
 }
