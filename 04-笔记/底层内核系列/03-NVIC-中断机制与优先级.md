@@ -123,7 +123,7 @@ EXTI15_10_IRQn = 40 ──► NVIC 通道 40（ISER/IP）──► CPU 跳 EXTI1
 
 `Serial.c` L6 `volatile uint8_t Serial_RxFlag;` + L88 `USART1_IRQHandler`（生产者）+ main.c L49 `Serial_GetRxFlag()`（消费者）。内核视角的三个知识点：
 
-1. **RXNE 的中断标志是"读 DR 自动清"**（L95 注释）：`USART_ReceiveData` 读 `USART1->DR` 这一动作本身清 RXNE——硬件设计把"取走数据"和"清标志"绑定成原子动作，所以 ISR 里先读数据再处理，标志不会丢。对比 TIM 的 UIF 要写 `TIM_ClearITPendingBit`——**每个外设清标志方式不同，这是芯片手册才有的知识**（RM0008 §15/§14）。
+1. **RXNE 的中断标志是"读 DR 自动清"**（L95 注释）：`USART_ReceiveData` 读 `USART1->DR` 这一动作本身清 RXNE——硬件设计把"取走数据"和"清标志"绑定成原子动作，所以 ISR 里先读数据再处理，标志不会丢。对比 TIM 的 UIF 要写 `TIM_ClearITPendingBit`——**每个外设清标志方式不同，这是芯片手册才有的知识**（RM0008 §24/§14）。
 2. **volatile 为什么必须**（07 篇展开）：main 里 `Serial_GetRxFlag()` 的读取在编译器的视角是一个"永远不变的全局变量"（因为 main 循环里没人写它——写的人在 ISR 里，编译器不知道中断会改），不加 volatile 可能被优化成"读一次、永远当 0"。
 3. **NVIC 优先级选择**：L45 给 USART1 配了 pre=1/sub=1。9600 波特率下每字节 1.04ms 才来一次，中断并不紧急，pre=1 合理；如果换成 115200 且要做大量处理，就要掂量"中断里干活时长 vs 下一字节到达间隔"——**中断里只做"取数据+置标志"，重活丢给 main**，这正是你状态机的设计，工程上完全正确。
 
